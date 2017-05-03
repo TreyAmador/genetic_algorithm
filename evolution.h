@@ -30,18 +30,19 @@ public:
 	void crossover(Population& population);
 	void mutate(Population& population,int mutations);
 	
-
-	// move to private:
-	void direction(
+	// move to private
+	int fitness(Organism& organism);
+	void collisions(
 		Organism& organism, int& fitness,
 		size_t col, int hrz);
 
-	int fitness(Organism& organism);
 
-	
+
 private:
 	
-
+	void each_collision(
+		Organism& organism, int& fitness,
+		size_t col, int hrz);
 
 	int base_pair();
 	void snp(int& bp);
@@ -55,6 +56,7 @@ private:
 	std::mt19937 mutation_;
 
 	int max_fitness_;
+
 
 };
 

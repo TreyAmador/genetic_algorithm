@@ -7,7 +7,7 @@
 
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes), genome_(num_genes),
-	max_fitness_(0 /* a permutation of collisions? */),
+	max_fitness_(0 /* a permutation of collisions? */ ),
 	mutation_(std::mt19937(std::random_device{}()))
 {
 	std::iota(genome_.begin(), genome_.end(), 0);
@@ -52,8 +52,9 @@ int Evolution::fitness(Population& population) {
 	int best_fitness = 0;
 	for (size_t i = 0; i < population.size(); ++i) {
 		int curr_fitness = this->fitness(population[i]);
-		if (curr_fitness < best_fitness)
+		if (curr_fitness < best_fitness) {
 			best_fitness = curr_fitness;
+		}
 	}
 	return best_fitness;
 }
@@ -62,34 +63,28 @@ int Evolution::fitness(Population& population) {
 int Evolution::fitness(Organism& organism) {
 	int fit_scr = 0;
 	for (size_t i = 0; i < organism.size(); ++i) {
-		this->direction(organism, fit_scr, i, MOVE::STILL);
-		this->direction(organism, fit_scr, i, MOVE::UP);
-		this->direction(organism, fit_scr, i, MOVE::DOWN);
+		this->collisions(organism, fit_scr, i, MOVE::STILL);
+		this->collisions(organism, fit_scr, i, MOVE::UP);
+		this->collisions(organism, fit_scr, i, MOVE::DOWN);
 	}
 	return fit_scr;
 }
 
 
-/*
-void Evolution::direction(
-	Organism& org, int& fit_scr, 
-	size_t col, int hrz)
+void Evolution::collisions(
+	Organism& org, int& fit_scr,
+	size_t column, int hrz) 
 {
-	int extr = hrz == MOVE::UP ? genome_size_ : -1;
-	++col;
-	for (int row = org[col]; col < org.size() && row != extr; ++col, row += hrz) {
-		//std::cout << row << " x " << col << ": " << org[col] << "\n";
-		if (org[col] == row) {
-			++fit_scr;
-		}
-	}
+	// test each org if it's colliding, incr fitness, leave
+
+
+
 }
-*/
 
 
 // TODO: revise to be more efficient
 // second condition in if => init differently
-void Evolution::direction(
+void Evolution::each_collision(
 	Organism& org, int& fit_scr,
 	size_t column, int hrz)
 {
@@ -97,14 +92,13 @@ void Evolution::direction(
 	int row = org[col];
 	int extr = hrz == MOVE::UP ? genome_size_ : -1;
 	while (col < org.size() && row != extr) {
-		if (org[col] == row && col != column)
+		if (org[col] == row && col != column) {
 			++fit_scr;
+		}
 		++col;
 		row += hrz;
 	}
 }
-
-
 
 
 int Evolution::base_pair() {
@@ -121,7 +115,5 @@ void Evolution::clear_genes() {
 	genome_.clear();
 	genome_.shrink_to_fit();
 }
-
-
 
 
