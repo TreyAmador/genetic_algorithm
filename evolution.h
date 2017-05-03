@@ -2,6 +2,7 @@
 #define EVOLUTION_H_
 #include <vector>
 #include <string>
+#include <random>
 
 
 class Evolution {
@@ -13,21 +14,35 @@ public:
 
 	std::vector<std::vector<int> > reproduce(int size);
 
-	void cross_population(
+	void crossover(
 		std::vector<std::vector<int> >& population, 
-		int crosses, int magnitude);
+		int swaps, int crosses);
+	
 
-	void crossover(std::vector<int>& x, std::vector<int>& y, int magnitude);
-	void mutate(std::vector<int>& organism, int mutations);
+	void mutate(
+		std::vector<std::vector<int> >& population,
+		int mutations);
+	
 
+	int base_pair();
+	void snp(int& bp);
 
-private:
 	void clear_genes();
+
+	
+private:
+	void crossover(
+		std::vector<int>& male,
+		std::vector<int>& female,
+		int crosses);
+
+	void mutate(std::vector<int>& organism, int mutations);
 
 
 private:
 	std::vector<int> genome_;
 	const int genome_size_;
+	std::mt19937 mutation_;
 
 
 };

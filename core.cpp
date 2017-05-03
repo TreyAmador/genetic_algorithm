@@ -5,9 +5,11 @@
 
 namespace {
 	// some of these should be in evolution?
-	const int POPULATION_SIZE = 100;
+	const int POPULATION_SIZE = 2;
 	const int CROSSES = 10;
+	const int INSTABILITY = 1;
 	const int NUM_GENES = 20;
+	const int MUTATIONS = 5;
 }
 
 
@@ -27,11 +29,22 @@ int Core::run() {
 	while (this->next_trail()) {
 		auto population = evolution.reproduce(POPULATION_SIZE);
 		while (this->unsolved()) {
-			evolution.cross_population(population,CROSSES);
-			// mutate
+			
+			util::print_2d(population);
+			std::cout << std::endl;
+
+			evolution.crossover(population,INSTABILITY,CROSSES);
+			util::print_2d(population);
+			std::cout << std::endl;
+
+			evolution.mutate(population, MUTATIONS);
+			util::print_2d(population);
+
 		}
 	}
 	
+
+
 	return 0;
 }
 
@@ -49,7 +62,14 @@ bool Core::next_trail() {
 
 bool Core::unsolved() {
 	//return true;
-	return false;
+	//return false;
+
+	static int trials = 0;
+	if (trials++ < 1)
+		return true;
+	else
+		return false;
+
 }
 
 

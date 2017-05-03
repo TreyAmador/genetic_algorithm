@@ -4,7 +4,7 @@
 #include <random>
 
 
-namespace UTIL {
+namespace util {
 
 
 	/*
@@ -29,7 +29,7 @@ namespace UTIL {
 	template <class T>
 	void print_2d(std::vector<std::vector<T> >& vec) {
 		for (size_t i = 0; i < vec.size(); ++i) {
-			UTIL::print_1d(vec[i]);
+			util::print_1d(vec[i]);
 		}
 		std::cout << std::endl;
 	}
