@@ -34,19 +34,22 @@ int Core::run() {
 		
 		//Organism organism = population[0];
 		
-		Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
-		//Organism organism(20, 5);
+		//Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+		Organism organism(20, 5);
 		util::print_1d(organism,"\n\n");
 
-		int fitness = 0;
+		int fitness = evolution.fitness(organism);
+		std::cout << fitness << "\n";
+
 		
+		/*
 		evolution.direction(organism,fitness,0,0);
 		std::cout << fitness << std::endl;
 		evolution.direction(organism, fitness, 0, 1);
 		std::cout << fitness << std::endl;
 		evolution.direction(organism, fitness, 0, -1);
 		std::cout << fitness << std::endl;
-
+		*/
 
 
 
