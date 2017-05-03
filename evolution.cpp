@@ -71,41 +71,39 @@ int Evolution::fitness(Organism& organism) {
 
 
 /*
-// this should move along the board
-// checking left, up-left, down-left
-// for potential collisions
-void Evolution::direction(
-	Organism& organism, int& fitness,
-	int col, int hrz)
-{
-	int max = hrz == MOVE::UP ? genome_size_ : -1;
-	int row = organism[col];
-	for (size_t c = col; c < organism.size() && row != max; ++c, row += hrz) {
-
-	}
-
-}
-*/
-
-
 void Evolution::direction(
 	Organism& org, int& fit_scr, 
 	size_t col, int hrz)
 {
-
 	int extr = hrz == MOVE::UP ? genome_size_ : -1;
 	++col;
 	for (int row = org[col]; col < org.size() && row != extr; ++col, row += hrz) {
 		//std::cout << row << " x " << col << ": " << org[col] << "\n";
-
 		if (org[col] == row) {
 			++fit_scr;
 		}
-
 	}
-
-	
 }
+*/
+
+
+// TODO: revise to be more efficient
+// second condition in if => init differently
+void Evolution::direction(
+	Organism& org, int& fit_scr,
+	size_t column, int hrz)
+{
+	size_t col = column;
+	int row = org[col];
+	int extr = hrz == MOVE::UP ? genome_size_ : -1;
+	while (col < org.size() && row != extr) {
+		if (org[col] == row && col != column)
+			++fit_scr;
+		++col;
+		row += hrz;
+	}
+}
+
 
 
 
