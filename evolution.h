@@ -4,8 +4,17 @@
 #include <string>
 #include <random>
 
-typedef std::vector<std::vector<int> > Population;
-typedef std::vector<int> Gene;
+typedef std::vector<int> Organism;
+typedef std::vector<Organism> Population;
+
+
+enum MOVE {
+	UP = 1,
+	DOWN = -1,
+	LEFT = -1,
+	RIGHT = 1,
+	STILL = 0
+};
 
 
 class Evolution {
@@ -15,14 +24,21 @@ public:
 	Evolution(int num_genes);
 	~Evolution();
 
+	int fitness(Population& population);
+
 	Population reproduce(int size);
 	void crossover(Population& population);
 	void mutate(Population& population,int mutations);
 	
-	int fitness(Population& population);
-
 	
 private:
+	void direction(
+		Organism& gene, int& fitness,
+		int col, int hrz);
+
+	int fitness(Organism& organism);
+
+
 	int base_pair();
 	void snp(int& bp);
 	
@@ -30,7 +46,7 @@ private:
 
 
 private:
-	Gene genome_;
+	Organism genome_;
 	const int genome_size_;
 	std::mt19937 mutation_;
 

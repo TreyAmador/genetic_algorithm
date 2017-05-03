@@ -7,8 +7,8 @@ namespace {
 	// some of these should be in evolution?
 	const int WIDTH = 20;
 	const int HEIGHT = 20;
-	const int NUM_GENES = WIDTH;
-	const int POPULATION_SIZE = HEIGHT;
+	const int NUM_GENES = 20;
+	const int POPULATION_SIZE = 100;
 	const int CROSSES = 10;
 	const int INSTABILITY = 1;
 	const int MUTATIONS = 5;
@@ -29,7 +29,7 @@ int Core::run() {
 	
 	Evolution evolution(NUM_GENES);
 	while (this->next_trail()) {
-		auto population = evolution.reproduce(10);
+		auto population = evolution.reproduce(POPULATION_SIZE);
 		while (this->unsolved()) {
 			evolution.crossover(population);
 			evolution.mutate(population, MUTATIONS);
