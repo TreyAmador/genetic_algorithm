@@ -4,6 +4,9 @@
 #include <string>
 #include <random>
 
+typedef std::vector<std::vector<int> > Population;
+typedef std::vector<int> Gene;
+
 
 class Evolution {
 
@@ -12,35 +15,22 @@ public:
 	Evolution(int num_genes);
 	~Evolution();
 
-	std::vector<std::vector<int> > reproduce(int size);
-
-	void crossover(
-		std::vector<std::vector<int> >& population, 
-		int swaps, int crosses);
+	Population reproduce(int size);
+	void crossover(Population& population);
+	void mutate(Population& population,int mutations);
 	
+	int fitness(Population& population);
 
-	void mutate(
-		std::vector<std::vector<int> >& population,
-		int mutations);
 	
-
+private:
 	int base_pair();
 	void snp(int& bp);
-
+	
 	void clear_genes();
 
-	
-private:
-	void crossover(
-		std::vector<int>& male,
-		std::vector<int>& female,
-		int crosses);
-
-	void mutate(std::vector<int>& organism, int mutations);
-
 
 private:
-	std::vector<int> genome_;
+	Gene genome_;
 	const int genome_size_;
 	std::mt19937 mutation_;
 

@@ -18,8 +18,8 @@ Evolution::~Evolution() {
 }
 
 
-std::vector<std::vector<int> > Evolution::reproduce(int size) {
-	std::vector<std::vector<int> > population(
+Population Evolution::reproduce(int size) {
+	Population population(
 		size, std::vector<int>(genome_size_));
 	for (size_t i = 0; i < population.size(); ++i) {
 		util::shuffle(genome_);
@@ -30,42 +30,25 @@ std::vector<std::vector<int> > Evolution::reproduce(int size) {
 }
 
 
-void Evolution::crossover(
-	std::vector<std::vector<int> >& population,
-	int swaps, int crosses)
-{
-	for (int c = 0; c < swaps; ++c)
-		for (size_t i = 0; i < population.size()-1; i += 2)
-			this->crossover(population[i], population[i + 1], crosses);
+void Evolution::crossover(Population& population) {
+	for (size_t i = 0; i < population.size()-1; i += 2)
+		for (int bp = 0; bp <= this->base_pair(); ++bp)
+			util::swap(population[i][bp], population[i+1][bp]);
 }
 
 
-void Evolution::crossover(
-	std::vector<int>& male,
-	std::vector<int>& female,
-	int crosses)
-{
-	for (int i = 0; i < crosses; ++i) {
-		int bp = this->base_pair();
-		util::swap(male[bp], female[bp]);
-	}
-}
-
-
-void Evolution::mutate(
-	std::vector<std::vector<int> >& population,
-	int mutations)
-{
+void Evolution::mutate(Population& population, int mutations) {
 	for (size_t i = 0; i < population.size(); ++i)
-		this->mutate(population[i], mutations);
+		for (int m = 0; m < mutations; ++m)
+			this->snp(population[i][this->base_pair()]);
 }
 
 
-void Evolution::mutate(std::vector<int>& organism, int mutations) {
-	for (int i = 0; i < mutations; ++i) {
-		int bp = this->base_pair();
-		this->snp(organism[bp]);
-	}
+int Evolution::fitness(Population& population) {
+
+
+
+	return 0;
 }
 
 
