@@ -30,7 +30,18 @@ std::vector<std::vector<int> > Evolution::reproduce(int size) {
 }
 
 
-void Evolution::crossover(std::vector<int>& x, std::vector<int>& y, int crosses) {
+void Evolution::cross_population(
+	std::vector<std::vector<int> >& population,
+	int crosses, int magnitude)
+{
+	for (int i = 0; i < crosses; ++i) {
+		int male = 0; // rand
+		int female = 0; // rand
+	}
+}
+
+
+void Evolution::crossover(std::vector<int>& male, std::vector<int>& female, int magnitude) {
 
 }
 

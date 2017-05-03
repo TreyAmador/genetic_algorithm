@@ -4,6 +4,9 @@
 
 
 namespace {
+	// some of these should be in evolution?
+	const int POPULATION_SIZE = 100;
+	const int CROSSES = 10;
 	const int NUM_GENES = 20;
 }
 
@@ -22,9 +25,9 @@ int Core::run() {
 	
 	Evolution evolution(NUM_GENES);
 	while (this->next_trail()) {
-		auto population = evolution.reproduce(100);
+		auto population = evolution.reproduce(POPULATION_SIZE);
 		while (this->unsolved()) {
-			// cross over
+			evolution.cross_population(population,CROSSES);
 			// mutate
 		}
 	}
