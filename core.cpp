@@ -29,14 +29,45 @@ int Core::run() {
 	
 	Evolution evolution(NUM_GENES);
 	while (this->next_trail()) {
-		auto population = evolution.reproduce(POPULATION_SIZE);
-		while (this->unsolved()) {
-			evolution.crossover(population);
-			evolution.mutate(population, MUTATIONS);
+		auto population = evolution.reproduce(2);
+		
+		
+		//Organism organism = population[0];
+		
+		Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+		util::print_1d(organism,"\n\n");
 
-			util::print_2d(population);
+		int fitness = 0;
+		
+		evolution.direction(organism,fitness,0,0);
+		std::cout << fitness << std::endl;
+		evolution.direction(organism, fitness, 0, 1);
+		std::cout << fitness << std::endl;
+		evolution.direction(organism, fitness, 0, -1);
+		std::cout << fitness << std::endl;
 
-		}
+
+
+
+
+		//while (this->unsolved()) {
+			//evolution.crossover(population);
+			//evolution.mutate(population, MUTATIONS);
+
+			//util::print_2d(population);
+			//std::cout << "\n" << std::endl;
+
+			//evolution.fitness(population);
+
+			//Organism organism = population[0];
+			//util::print_1d(organism);
+			//std::cout << std::endl;
+
+			//evolution.fitness(organism);
+
+			//std::cout << std::endl;
+		
+		//}
 	}
 
 	return 0;

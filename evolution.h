@@ -30,13 +30,17 @@ public:
 	void crossover(Population& population);
 	void mutate(Population& population,int mutations);
 	
-	
-private:
+
+	// move to private:
 	void direction(
-		Organism& gene, int& fitness,
-		int col, int hrz);
+		Organism& organism, int& fitness,
+		size_t col, int hrz);
 
 	int fitness(Organism& organism);
+
+	
+private:
+	
 
 
 	int base_pair();
@@ -50,6 +54,7 @@ private:
 	const int genome_size_;
 	std::mt19937 mutation_;
 
+	int max_fitness_;
 
 };
 

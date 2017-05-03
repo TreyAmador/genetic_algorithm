@@ -1,6 +1,7 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
 #include <iostream>
+#include <string>
 #include <random>
 
 
@@ -17,12 +18,18 @@ namespace util {
 	*/
 
 
+	//void print_newline() {
+	//	std::cout << std::endl;
+	//}
+
 	
 	template <class T>
-	void print_1d(std::vector<T>& vec) {
+	void print_1d(std::vector<T>& vec, std::string end="\n") {
 		for (size_t i = 0; i < vec.size(); ++i)
 			std::cout << vec[i] << " ";
-		std::cout << std::endl;
+		std::cout << end;
+
+
 	}
 
 

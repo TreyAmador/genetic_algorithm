@@ -7,6 +7,7 @@
 
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes), genome_(num_genes),
+	max_fitness_(0 /* a permutation of collisions? */),
 	mutation_(std::mt19937(std::random_device{}()))
 {
 	std::iota(genome_.begin(), genome_.end(), 0);
@@ -69,6 +70,7 @@ int Evolution::fitness(Organism& organism) {
 }
 
 
+/*
 // this should move along the board
 // checking left, up-left, down-left
 // for potential collisions
@@ -83,6 +85,28 @@ void Evolution::direction(
 	}
 
 }
+*/
+
+
+void Evolution::direction(
+	Organism& org, int& fit_scr, 
+	size_t col, int hrz)
+{
+
+	int extr = hrz == MOVE::UP ? genome_size_ : -1;
+	++col;
+	for (int row = org[col]; col < org.size() && row != extr; ++col, row += hrz) {
+		//std::cout << row << " x " << col << ": " << org[col] << "\n";
+
+		if (org[col] == row) {
+			++fit_scr;
+		}
+
+	}
+
+	
+}
+
 
 
 int Evolution::base_pair() {
