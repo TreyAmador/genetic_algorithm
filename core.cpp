@@ -12,7 +12,7 @@ namespace {
 	const int MUTATIONS = 1;
 
 	// testing structures
-	// Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+	Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
 	// Organism organism(20, 5);
 }
 
@@ -33,15 +33,19 @@ int Core::run() {
 	Evolution evolution(NUM_GENES);
 	while (this->next_trail()) {
 		Population population = evolution.reproduce(POPULATION_SIZE);
-		
 		Population fittest;
-		
 		while (this->unsolved()) {
 			evolution.crossover(population);
 			evolution.mutate(population, MUTATIONS);
 
-			util::print_2d(population);
-			
+			//int fit_scr = evolution.fitness(organism);
+			//std::cout << fit_scr << std::endl;
+
+			evolution.fitness(population, fittest);
+
+			int fitness = evolution.fitness(organism);
+			std::cout << fitness << "\n" << std::endl;
+
 
 		}
 	}

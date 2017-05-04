@@ -67,6 +67,12 @@ namespace util {
 	}
 
 
+	struct IndexElement {
+		int index;
+		int element;
+	};
+
+
 
 }
 

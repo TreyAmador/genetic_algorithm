@@ -24,25 +24,27 @@ public:
 	Evolution(int num_genes);
 	~Evolution();
 
-	int fitness(Population& population);
-
 	Population reproduce(int size);
 	void crossover(Population& population);
 	void mutate(Population& population,int mutations);
 	
-	// move to private
+	void fitness(
+		Population& population,
+		Population& fittest);
+	int fitness(Population& population);
+
+
+
 	int fitness(Organism& organism);
 	void collisions(
 		Organism& organism, int& fitness,
 		size_t col, int hrz);
 
 
-
 private:
 	
-	void each_collision(
-		Organism& organism, int& fitness,
-		size_t col, int hrz);
+
+	int least_fit(int genes);
 
 	int base_pair();
 	void snp(int& bp);
@@ -55,7 +57,7 @@ private:
 	const int genome_size_;
 	std::mt19937 mutation_;
 
-	int max_fitness_;
+	int least_fit_;
 
 
 };

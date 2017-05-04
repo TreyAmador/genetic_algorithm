@@ -5,12 +5,22 @@
 #include "utilities.h"
 
 
+struct Fit {
+	int max;
+	int index;
+};
+
+
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes), genome_(num_genes),
-	max_fitness_(0 /* a permutation of collisions? */ ),
+	least_fit_(num_genes*(num_genes-1)/2),
 	mutation_(std::mt19937(std::random_device{}()))
 {
 	std::iota(genome_.begin(), genome_.end(), 0);
+
+	std::cout << least_fit_ << "\n" << std::endl;
+	std::cout << this->least_fit(num_genes) << "\n" << std::endl;
+
 }
 
 
@@ -48,6 +58,17 @@ void Evolution::mutate(Population& population, int mutations) {
 }
 
 
+
+void Evolution::fitness(Population& population, Population& fittest) {
+
+	util::IndexElement pair = { -1, -1 };
+	
+
+
+
+}
+
+
 int Evolution::fitness(Population& population) {
 	int best_fitness = 0;
 	for (size_t i = 0; i < population.size(); ++i) {
@@ -71,20 +92,9 @@ int Evolution::fitness(Organism& organism) {
 }
 
 
-void Evolution::collisions(
-	Organism& org, int& fit_scr,
-	size_t column, int hrz) 
-{
-	// test each org if it's colliding, incr fitness, leave
-
-
-
-}
-
-
 // TODO: revise to be more efficient
 // second condition in if => init differently
-void Evolution::each_collision(
+void Evolution::collisions(
 	Organism& org, int& fit_scr,
 	size_t column, int hrz)
 {
@@ -92,12 +102,21 @@ void Evolution::each_collision(
 	int row = org[col];
 	int extr = hrz == MOVE::UP ? genome_size_ : -1;
 	while (col < org.size() && row != extr) {
-		if (org[col] == row && col != column) {
+		if (org[col] == row && col != column)
 			++fit_scr;
-		}
 		++col;
 		row += hrz;
 	}
+}
+
+
+// could also be genes * ( genes - 1 ) / 2
+int Evolution::least_fit(int genes) {
+	int fit = 0;
+	for (int i = 1; i < genes; ++i) {
+		fit += i;
+	}
+	return fit;
 }
 
 
