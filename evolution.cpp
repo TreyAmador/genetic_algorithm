@@ -20,8 +20,9 @@ struct Fit {
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes), genome_(num_genes),
 	least_fit_(this->least_fit(num_genes)),
-	mutation_(static_cast<unsigned int>(
-		std::chrono::system_clock::now().time_since_epoch().count()))
+	//mutation_(static_cast<unsigned int>(
+	//	std::chrono::system_clock::now().time_since_epoch().count()))
+	mutation_(this->mt19937_seeded())
 {
 	std::iota(genome_.begin(), genome_.end(), 0);
 }
@@ -32,6 +33,7 @@ Evolution::~Evolution() {
 }
 
 
+/*
 Population Evolution::reproduce(int size) {
 	Population population(
 		size, std::vector<int>(genome_size_));
@@ -42,21 +44,16 @@ Population Evolution::reproduce(int size) {
 	}
 	return population;
 }
-
+*/
 
 
 Population Evolution::reproduce(size_t size, int fit_scr) {
 	Population population;
-	int iter = 0;
 	while (population.size() < size) {
 		Organism organism = this->generate_organism(genome_size_);
-		if (this->fitness(organism) < fit_scr) {
+		if (this->fitness(organism) < fit_scr)
 			population.push_back(organism);
-			std::cout << "Fitness: " << this->fitness(organism) << "\n\n";
-		}
-		++iter;
 	}
-	std::cout << "\n\nNumber of iterations: " << iter << std::endl;
 	return population;
 }
 
@@ -64,6 +61,7 @@ Population Evolution::reproduce(size_t size, int fit_scr) {
 void Evolution::crossover(Population& population) {
 	for (size_t i = 0; i < population.size() - 1; i += 2) {
 		int basepair = this->base_pair();
+		std::cout << "site of mutation: " << basepair << std::endl;
 		for (int bp = 0; bp <= basepair; ++bp) {
 			util::swap(population[i][bp], population[i + 1][bp]);
 		}

@@ -7,12 +7,12 @@
 namespace {
 	// some of these should be in evolution?
 	const int NUM_GENES = 21;
-	const int POP_SIZE = 100;
+	const int POP_SIZE = 1000;
 	const int CROSSES = 10;
 	const int INSTABILITY = 1;
 	const int MUTATIONS = 1;
 
-	const int MIN_FITNESS = 16;
+	const int MIN_FITNESS = 20;
 
 	// testing structures
 	// Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
@@ -38,9 +38,12 @@ int Core::run() {
 	while (this->next_trail()) {
 		//Population fittest;
 		while (this->unsolved()) {
-
+			// a population, assuming only those above certain fitness survive
 			Population population = evolution.reproduce(POP_SIZE, MIN_FITNESS);
-			util::print_2d(population);
+			
+			//util::print_2d(population);
+			evolution.crossover(population);
+			//util::print_2d(population);
 
 
 			//Population population = evolution.reproduce(POPULATION_SIZE);

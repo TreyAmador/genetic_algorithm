@@ -25,7 +25,7 @@ public:
 	Evolution(int num_genes);
 	~Evolution();
 
-	Population reproduce(int size);
+	//Population reproduce(int size);
 
 	// update this
 	Population reproduce(size_t size, int fit_scr);
