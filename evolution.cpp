@@ -5,6 +5,11 @@
 #include "utilities.h"
 
 
+namespace {
+	const int SENTINEL = -1;
+}
+
+
 struct Fit {
 	int max;
 	int index;
@@ -13,14 +18,10 @@ struct Fit {
 
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes), genome_(num_genes),
-	least_fit_(num_genes*(num_genes-1)/2),
+	least_fit_(this->least_fit(num_genes)),
 	mutation_(std::mt19937(std::random_device{}()))
 {
 	std::iota(genome_.begin(), genome_.end(), 0);
-
-	std::cout << least_fit_ << "\n" << std::endl;
-	std::cout << this->least_fit(num_genes) << "\n" << std::endl;
-
 }
 
 
@@ -58,14 +59,21 @@ void Evolution::mutate(Population& population, int mutations) {
 }
 
 
+void Evolution::fitness(Population& population, Population& fit_set) {
+	util::IndexElement fit = { SENTINEL, least_fit_ };
+	for (size_t i = 0; i < population.size(); ++i) {
+		int fit_scr = this->fitness(population[i]);
+		if (fit_scr < fit.element)
+			fit = { static_cast<int>(i), fit_scr };
+	}
+	if (fit.index != SENTINEL) {
+		fit_set.push_back(population[fit.index]);
 
-void Evolution::fitness(Population& population, Population& fittest) {
-
-	util::IndexElement pair = { -1, -1 };
-	
-
-
-
+		if (fit.element < 10) {
+			std::cout << "Fitness element " << fit.element << "\n";
+			util::print_1d(population[fit.index]);
+		}
+	}
 }
 
 
@@ -105,7 +113,7 @@ void Evolution::collisions(
 		if (org[col] == row && col != column)
 			++fit_scr;
 		++col;
-		row += hrz;
+		row += hrz;	
 	}
 }
 

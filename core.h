@@ -15,6 +15,8 @@ private:
 	bool next_trail();
 	bool unsolved();
 
+	int complete(bool success);
+
 
 
 };

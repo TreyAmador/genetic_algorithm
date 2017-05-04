@@ -6,6 +6,7 @@
 
 typedef std::vector<int> Organism;
 typedef std::vector<Organism> Population;
+typedef Population::iterator PopIter;
 
 
 enum MOVE {
@@ -30,20 +31,15 @@ public:
 	
 	void fitness(
 		Population& population,
-		Population& fittest);
+		Population& fit_set);
 	int fitness(Population& population);
-
-
-
 	int fitness(Organism& organism);
-	void collisions(
-		Organism& organism, int& fitness,
-		size_t col, int hrz);
 
 
 private:
-	
-
+	void collisions(
+		Organism& organism, int& fitness,
+		size_t col, int hrz);
 	int least_fit(int genes);
 
 	int base_pair();

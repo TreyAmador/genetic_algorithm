@@ -24,9 +24,12 @@ namespace util {
 
 	
 	template <class T>
-	void print_1d(std::vector<T>& vec, std::string end="\n") {
+	void print_1d(
+		std::vector<T>& vec, 
+		std::string sep = " ", std::string end="\n")
+	{
 		for (size_t i = 0; i < vec.size(); ++i)
-			std::cout << vec[i] << " ";
+			std::cout << vec[i] << sep;
 		std::cout << end;
 
 
@@ -34,11 +37,14 @@ namespace util {
 
 
 	template <class T>
-	void print_2d(std::vector<std::vector<T> >& vec) {
+	void print_2d(
+		std::vector<std::vector<T> >& vec, 
+		std::string sep=" ", std::string end="\n\n") 
+	{
 		for (size_t i = 0; i < vec.size(); ++i) {
-			util::print_1d(vec[i]);
+			util::print_1d(vec[i],sep);
 		}
-		std::cout << std::endl;
+		std::cout << end;
 	}
 
 
