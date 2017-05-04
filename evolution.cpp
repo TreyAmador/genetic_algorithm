@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <numeric>
+#include <chrono>
 #include "evolution.h"
 #include "utilities.h"
 
@@ -19,7 +20,8 @@ struct Fit {
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes), genome_(num_genes),
 	least_fit_(this->least_fit(num_genes)),
-	mutation_(std::mt19937(std::random_device{}()))
+	mutation_(static_cast<unsigned int>(
+		std::chrono::system_clock::now().time_since_epoch().count()))
 {
 	std::iota(genome_.begin(), genome_.end(), 0);
 }
@@ -38,6 +40,23 @@ Population Evolution::reproduce(int size) {
 		for (size_t j = 0; j < population[i].size(); ++j)
 			population[i][j] = genome_[j];
 	}
+	return population;
+}
+
+
+
+Population Evolution::reproduce(size_t size, int fit_scr) {
+	Population population;
+	int iter = 0;
+	while (population.size() < size) {
+		Organism organism = this->generate_organism(genome_size_);
+		if (this->fitness(organism) < fit_scr) {
+			population.push_back(organism);
+			std::cout << "Fitness: " << this->fitness(organism) << "\n\n";
+		}
+		++iter;
+	}
+	std::cout << "\n\nNumber of iterations: " << iter << std::endl;
 	return population;
 }
 
@@ -68,11 +87,6 @@ void Evolution::fitness(Population& population, Population& fit_set) {
 	}
 	if (fit.index != SENTINEL) {
 		fit_set.push_back(population[fit.index]);
-
-		if (fit.element < 10) {
-			std::cout << "Fitness element " << fit.element << "\n";
-			util::print_1d(population[fit.index]);
-		}
 	}
 }
 
@@ -115,6 +129,30 @@ void Evolution::collisions(
 		++col;
 		row += hrz;	
 	}
+}
+
+
+int Evolution::mean_fitness(Population& population) {
+	int summation = 0, size = population.size();
+	for (PopIter p = population.begin(); p != population.end(); ++p)
+		summation += this->fitness(*p);
+	return summation / size;
+}
+
+
+Organism Evolution::generate_organism(int size) {
+	std::mt19937 mt = this->mt19937_seeded();
+	Organism organism(size);
+	std::generate(organism.begin(), organism.end(), 
+		[&mt, size] { return mt() % size;});
+	return organism;
+}
+
+
+std::mt19937 Evolution::mt19937_seeded() {
+	std::mt19937 mt(static_cast<unsigned int>(
+		std::chrono::high_resolution_clock::now().time_since_epoch().count()));
+	return mt;
 }
 
 

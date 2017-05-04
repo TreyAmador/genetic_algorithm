@@ -1,9 +1,10 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
+#include <algorithm>
 #include <iostream>
+#include <chrono>
 #include <string>
 #include <random>
-
 
 namespace util {
 

@@ -26,6 +26,10 @@ public:
 	~Evolution();
 
 	Population reproduce(int size);
+
+	// update this
+	Population reproduce(size_t size, int fit_scr);
+
 	void crossover(Population& population);
 	void mutate(Population& population,int mutations);
 	
@@ -36,7 +40,18 @@ public:
 	int fitness(Organism& organism);
 
 
+	int mean_fitness(Population& population);
+
+
+
+	Organism generate_organism(int size);
+
+	std::mt19937 mt19937_seeded();
+
+
 private:
+
+
 	void collisions(
 		Organism& organism, int& fitness,
 		size_t col, int hrz);
