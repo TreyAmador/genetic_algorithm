@@ -17,11 +17,14 @@ struct Fit {
 };
 
 
+bool organism_sort(Organism& a, Organism& b) {
+	return a.fitness_ < b.fitness_;
+}
+
+
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes), genome_(num_genes),
 	least_fit_(this->least_fit(num_genes)),
-	//mutation_(static_cast<unsigned int>(
-	//	std::chrono::system_clock::now().time_since_epoch().count()))
 	mutation_(this->mt19937_seeded())
 {
 	std::iota(genome_.begin(), genome_.end(), 0);
@@ -33,18 +36,14 @@ Evolution::~Evolution() {
 }
 
 
-
-
-Population Evolution::produce(size_t size, int fit_thr) {
+Population Evolution::produce(size_t pop_size, int fit_thr) {
 	Population population;
-	while (population.size() < size) {
-		//Organism organism = this->generate_organism(genome_size_);
-		Organism organism;
-		organism.genome_ = this->generate_genome(genome_size_);
-		organism.fitness_ = this->fitness(organism);
+	while (population.size() < pop_size) {
+		Organism organism = this->generate_organism(genome_size_);
 		if (organism.fitness_ < fit_thr)
 			population.push_back(organism);
 	}
+	this->sort_population(population);
 	return population;
 }
 
@@ -91,6 +90,7 @@ void Evolution::fitness(Population& population, Population& fit_set) {
 }
 */
 
+/*
 int Evolution::fitness(Population& population) {
 	int best_fitness = 0;
 	for (size_t i = 0; i < population.size(); ++i) {
@@ -101,7 +101,7 @@ int Evolution::fitness(Population& population) {
 	}
 	return best_fitness;
 }
-
+*/
 
 /*
 int Evolution::fitness(Organism& organism) {
@@ -151,6 +151,23 @@ int Evolution::mean_fitness(Population& population) {
 	return summation / size;
 }
 */
+
+
+void Evolution::sort_population(Population& population) {
+	std::sort(
+		population.begin(),
+		population.end(),
+		organism_sort);
+}
+
+
+Organism Evolution::generate_organism(int size) {
+	Organism organism;
+	organism.genome_ = this->generate_genome(size);
+	organism.fitness_ = this->fitness(organism);
+	return organism;
+}
+
 
 std::vector<int> Evolution::generate_genome(int size) {
 	std::mt19937 mt = this->mt19937_seeded();

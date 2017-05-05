@@ -32,8 +32,6 @@ namespace util {
 		for (size_t i = 0; i < vec.size(); ++i)
 			std::cout << vec[i] << sep;
 		std::cout << end;
-
-
 	}
 
 

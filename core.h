@@ -12,7 +12,7 @@ public:
 
 
 private:
-	bool next_trail();
+	bool next_trial();
 	bool unsolved();
 
 	int complete(bool success);
