@@ -43,11 +43,8 @@ Population Evolution::produce(size_t pop_size, int fit_thr) {
 
 Population Evolution::reproduce(Population& parental) {
 	Population filial;
-
-
-	
-
-
+	for (size_t i = 0; i < parental.size()-1; i += 2)
+		filial.push_back(this->crossover(parental[i], parental[i+1]));
 	return filial;
 }
 
@@ -84,6 +81,12 @@ void Evolution::crossover(
 		parent.genome_.begin()+end,
 		offspring.genome_.begin()+beg);
 }
+
+
+//Population Evolution::crossover(Population& parent) {
+//	Population filial;
+//	return filial;
+//}
 
 
 /*
@@ -175,6 +178,13 @@ inline void Evolution::snp(int& bp) {
 	bp = (mutation_()+bp)%genome_size_;
 }
 
+
+void Evolution::print_population(Population& pop) {
+	for (auto iter = pop.begin(); iter != pop.end(); ++iter) {
+		util::print_1d(iter->genome_, " ", " ");
+		std::cout << ", fitness: " << iter->fitness_ << "\n";
+	}
+}
 
 
 

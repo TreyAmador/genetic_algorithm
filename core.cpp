@@ -7,7 +7,7 @@
 namespace {
 	// some of these should be in evolution?
 	const int NUM_GENES = 21;
-	const int POP_SIZE = 1000;
+	const int POP_SIZE = 2;
 	const int CROSSES = 10;
 	const int INSTABILITY = 1;
 	const int MUTATIONS = 1;
@@ -37,20 +37,18 @@ Core::~Core() {
 int Core::run() {
 	
 	Evolution evolution(NUM_GENES);
-	
-	/*
 	while (this->next_trial()) {
 		Population parental = evolution.produce(POP_SIZE, FIT_THRESHOLD);
 		while (this->unsolved()) {
 			Population filial = evolution.reproduce(parental);
 
+
+
+
 		}
+
 	}
-	*/
 	
-	
-
-
 	return this->complete(true);
 }
 

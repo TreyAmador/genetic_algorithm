@@ -47,7 +47,6 @@ public:
 		int beg, int end);
 
 
-	//Population crossover(Population& population);
 	//void mutate(Population& population,int mutations);
 	//int fitness(Population& population);
 	
@@ -59,6 +58,8 @@ public:
 	inline void sort_population(Population& population);
 	inline std::mt19937 mt19937_seeded();
 
+
+	void print_population(Population& population);
 
 	//void cull(Population& population);
 
