@@ -3,10 +3,25 @@
 #include <vector>
 #include <string>
 #include <random>
+#include <queue>
 
-typedef std::vector<int> Organism;
+
+struct Organism {
+	std::vector<int> genome_;
+	int fitness_;
+	//int operator[](int i) {
+	//	return genome_[i];
+	//}
+};
+
+
+//typedef std::vector<int> Organism;
 typedef std::vector<Organism> Population;
-typedef Population::iterator PopIter;
+//typedef Population::iterator PopIter;
+
+
+
+
 
 
 enum MOVE {
@@ -25,35 +40,44 @@ public:
 	Evolution(int num_genes);
 	~Evolution();
 
-	//Population reproduce(int size);
-
-	// update this
-	Population reproduce(size_t size, int fit_scr);
-
-	void crossover(Population& population);
-	void mutate(Population& population,int mutations);
 	
-	void fitness(
-		Population& population,
-		Population& fit_set);
+	
+	//Population produce(size_t size, int fit_scr);
+
+	Population produce(size_t size, int fit_thr);
+
+
+	//void crossover(Population& population);
+	//void mutate(Population& population,int mutations);
+	
+	//void fitness(
+	//	Population& population,
+	//	Population& fit_set);
+	
+	
 	int fitness(Population& population);
 	int fitness(Organism& organism);
 
-
-	int mean_fitness(Population& population);
-
+	//int fitness(Organism& organ);
 
 
-	Organism generate_organism(int size);
+	//int mean_fitness(Population& population);
+
+
+
+	std::vector<int> generate_genome(int size);
 
 	std::mt19937 mt19937_seeded();
+
+
+	//void cull(Population& population);
 
 
 private:
 
 
 	void collisions(
-		Organism& organism, int& fitness,
+		std::vector<int>& organism, int& fitness,
 		size_t col, int hrz);
 	int least_fit(int genes);
 
@@ -64,7 +88,8 @@ private:
 
 
 private:
-	Organism genome_;
+	//Organism genome_;
+	std::vector<int> genome_;
 	const int genome_size_;
 	std::mt19937 mutation_;
 

@@ -74,6 +74,13 @@ namespace util {
 	}
 
 
+	template <class T>
+	void clear_vec(std::vector<T>& vec) {
+		vec.clear();
+		vec.shrink_to_fit();
+	}
+
+
 	struct IndexElement {
 		int index;
 		int element;

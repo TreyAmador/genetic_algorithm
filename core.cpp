@@ -14,6 +14,10 @@ namespace {
 
 	const int MIN_FITNESS = 20;
 
+	std::vector<int> test_genome = {
+		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+	};
+
 	// testing structures
 	// Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 	// Organism organism(NUM_GENES, 5);
@@ -33,38 +37,36 @@ Core::~Core() {
 
 int Core::run() {
 	
-	
 	Evolution evolution(NUM_GENES);
+
+	Organism organism;
+	organism.genome_ = evolution.generate_genome(NUM_GENES);
+	//organism.genome_ = test_genome;
+	organism.fitness_ = evolution.fitness(organism);
+
+	util::print_1d(organism.genome_);
+	std::cout << "fitness: " << organism.fitness_ << std::endl;
+
+	//Organism organism = evolution.produce(POP_SIZE, MIN_FITNESS);
+	//util::print_1d(organism.genome_);
+
+
+	/*
+	// assume only ~10 percent survive initially
 	while (this->next_trail()) {
-		//Population fittest;
+		//Population parental = evolution.produce(POP_SIZE,MIN_FITNESS);
 		while (this->unsolved()) {
-			// a population, assuming only those above certain fitness survive
-			Population population = evolution.reproduce(POP_SIZE, MIN_FITNESS);
 			
-			//util::print_2d(population);
-			evolution.crossover(population);
-			//util::print_2d(population);
-
-
-			//Population population = evolution.reproduce(POPULATION_SIZE);
-			//std::cout << "mean fitness newborn " << evolution.mean_fitness(population) << "\n";
-			//evolution.crossover(population);
-			//evolution.mutate(population, MUTATIONS);
 			
-			//std::cout << "mean fitness mutants " << evolution.mean_fitness(population) << "\n";
 
-			//Organism organism = fittest[fittest.size()-1];
-			//if (evolution.fitness(organism) < 10)
-			//	util::print_1d(organism);
 
-			//Population population = evolution.reproduce(2, 1);
-			//util::print_2d(population);
-			//int mean_fit = evolution.mean_fitness(population);
-			//std::cout << "\n" << mean_fit << "\n" << std::endl;
 
 		}
 	}
 	
+	*/
+
+
 	return this->complete(true);
 }
 
