@@ -17,6 +17,17 @@ bool organism_sort(Organism& a, Organism& b) {
 }
 
 
+bool organism_search(Organism& a, Organism& b) {
+	return a.fitness_ < b.fitness_;
+}
+
+
+//template<class Iter, class T>
+//Iter binary_find(Iter begin, Iter end, T val) {
+//
+//}
+
+
 Evolution::Evolution(int num_genes) : 
 	genome_size_(num_genes),
 	least_fit_(this->least_fit(num_genes)),
@@ -43,8 +54,8 @@ Population Evolution::produce(size_t pop_size, int fit_thr) {
 
 Population Evolution::reproduce(Population& parental) {
 	Population filial;
-	for (size_t i = 0; i < parental.size()-1; i += 2)
-		filial.push_back(this->crossover(parental[i], parental[i+1]));
+	for (size_t i = 0; i < parental.size() - 1; i += 2)
+		filial.push_back(this->crossover(parental[i], parental[i + 1]));
 	return filial;
 }
 
@@ -52,10 +63,15 @@ Population Evolution::reproduce(Population& parental) {
 Organism Evolution::crossover(Organism& male, Organism& female) {
 	Organism offspring;
 	offspring.genome_.resize(genome_size_);
-	if (rand() % 2)
+	if (mutation_() % 2)
 		this->crossover(male, female, offspring);
 	else
 		this->crossover(female, male, offspring);
+	
+	// fitness calc should be removed, placed only in mutation fxn
+	//offspring.fitness_ = this->fitness(offspring);
+	// here just for testing purposes
+	
 	return offspring;
 }
 
@@ -83,22 +99,37 @@ void Evolution::crossover(
 }
 
 
-//Population Evolution::crossover(Population& parent) {
-//	Population filial;
-//	return filial;
-//}
-
-
-/*
-void Evolution::crossover(Population& population) {
-	for (size_t i = 0; i < population.size() - 1; i += 2) {
-		int basepair = this->base_pair();
-		for (int bp = 0; bp <= basepair; ++bp) {
-			util::swap(population[i][bp], population[i + 1][bp]);
+// test this
+void Evolution::mutate(Population& pop) {
+	for (auto p = pop.begin(); p != pop.end(); ++p) {
+		int mutations = mutation_() % 2;
+		for (int i = 0; i < mutations; ++i) {
+			this->snp(p->genome_[this->base_pair()]);
 		}
+		p->fitness_ = this->fitness(*p);
 	}
+	this->sort_population(pop);
 }
-*/
+
+
+void Evolution::cull(Population& pop, int threshold) {
+	int index = SENTINEL;
+	for (size_t i = 0; i < pop.size() && index == SENTINEL; ++i)
+		if (pop[i].fitness_ > threshold)
+			index = i;
+	if (index != SENTINEL)
+		pop.erase(pop.begin()+index, pop.end());
+
+	//pop.erase(pop.begin(),pop.begin()+(pop.size()/threshold));
+
+
+	//auto iter = std::lower_bound(pop.begin(), pop.end(), organism_search);
+	//if (iter != pop.end()) {
+	//	util::print_1d(iter->genome_);
+	//	std::cout << "fitness fxn " << iter->fitness_ << std::endl;
+	//}
+
+}
 
 
 int Evolution::fitness(Organism& organism) {

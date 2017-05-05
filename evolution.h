@@ -33,24 +33,21 @@ public:
 	Population produce(size_t pop_size, int fit_thr);
 	Population reproduce(Population& parental);
 
-	int fitness(Organism& organism);
 	Organism crossover(Organism& male, Organism& female);
-	
 	void crossover(
 		Organism& parent_a,
 		Organism& parent_b,
 		Organism& offspring);
-
 	void crossover(
 		Organism& offspring,
 		Organism& parent,
 		int beg, int end);
 
-
-	//void mutate(Population& population,int mutations);
-	//int fitness(Population& population);
+	void mutate(Population& population);	
+	void cull(Population& population, int threshold);
 	
-
+	
+	int fitness(Organism& organism);
 
 	Organism generate_organism(int size);
 	std::vector<int> generate_genome(int size);
@@ -60,8 +57,6 @@ public:
 
 
 	void print_population(Population& population);
-
-	//void cull(Population& population);
 
 
 private:

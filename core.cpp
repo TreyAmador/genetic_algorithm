@@ -7,7 +7,7 @@
 namespace {
 	// some of these should be in evolution?
 	const int NUM_GENES = 21;
-	const int POP_SIZE = 2;
+	const int POP_SIZE = 10000;
 	const int CROSSES = 10;
 	const int INSTABILITY = 1;
 	const int MUTATIONS = 1;
@@ -41,12 +41,15 @@ int Core::run() {
 		Population parental = evolution.produce(POP_SIZE, FIT_THRESHOLD);
 		while (this->unsolved()) {
 			Population filial = evolution.reproduce(parental);
+			evolution.mutate(filial);
+			evolution.cull(filial, 20);
 
+			std::cout << "this many people " << filial.size() << std::endl;
 
-
-
+			util::print_1d(filial[0].genome_);
+			std::cout << "fitness: " << filial[0].fitness_ << "\n\n";
+			
 		}
-
 	}
 	
 	return this->complete(true);
