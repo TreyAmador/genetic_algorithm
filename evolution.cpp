@@ -11,28 +11,21 @@ namespace {
 }
 
 
-struct Fit {
-	int max;
-	int index;
-};
-
-
+// fittest organisms at top of heirarchy
 bool organism_sort(Organism& a, Organism& b) {
 	return a.fitness_ < b.fitness_;
 }
 
 
 Evolution::Evolution(int num_genes) : 
-	genome_size_(num_genes), genome_(num_genes),
+	genome_size_(num_genes),
 	least_fit_(this->least_fit(num_genes)),
 	mutation_(this->mt19937_seeded())
-{
-	std::iota(genome_.begin(), genome_.end(), 0);
-}
+{}
 
 
 Evolution::~Evolution() {
-	this->clear_genes();
+	
 }
 
 
@@ -48,14 +41,50 @@ Population Evolution::produce(size_t pop_size, int fit_thr) {
 }
 
 
-/*
-Organ Evolution::produce(size_t size, int fit_thr) {
-	Organ organism;
-	organism.genome_ = this->generate_organism(genome_size_);
-	organism.fitness_ = this->fitness(organism);
-	return organism;
+Population Evolution::reproduce(Population& parental) {
+	Population filial;
+
+
+	
+
+
+	return filial;
 }
-*/
+
+
+Organism Evolution::crossover(Organism& male, Organism& female) {
+	Organism offspring;
+	offspring.genome_.resize(genome_size_);
+	if (rand() % 2)
+		this->crossover(male, female, offspring);
+	else
+		this->crossover(female, male, offspring);
+	return offspring;
+}
+
+
+void Evolution::crossover(
+	Organism& parent_a,
+	Organism& parent_b,
+	Organism& offspring)
+{
+	int bp = this->base_pair();
+	this->crossover(parent_a, offspring, 0, bp);
+	this->crossover(parent_b, offspring, bp, offspring.genome_.size());
+}
+
+
+void Evolution::crossover(
+	Organism& parent,
+	Organism& offspring,
+	int beg, int end)
+{
+	std::copy(
+		parent.genome_.begin()+beg,
+		parent.genome_.begin()+end,
+		offspring.genome_.begin()+beg);
+}
+
 
 /*
 void Evolution::crossover(Population& population) {
@@ -68,52 +97,6 @@ void Evolution::crossover(Population& population) {
 }
 */
 
-/*
-void Evolution::mutate(Population& population, int mutations) {
-	for (size_t i = 0; i < population.size(); ++i)
-		for (int m = 0; m < mutations; ++m)
-			this->snp(population[i][this->base_pair()]);
-}
-*/
-
-
-/*
-void Evolution::fitness(Population& population, Population& fit_set) {
-	util::IndexElement fit = { SENTINEL, least_fit_ };
-	for (size_t i = 0; i < population.size(); ++i) {
-		int fit_scr = this->fitness(population[i]);
-		if (fit_scr < fit.element)
-			fit = { static_cast<int>(i), fit_scr };
-	}
-	if (fit.index != SENTINEL)
-		fit_set.push_back(population[fit.index]);
-}
-*/
-
-/*
-int Evolution::fitness(Population& population) {
-	int best_fitness = 0;
-	for (size_t i = 0; i < population.size(); ++i) {
-		int curr_fitness = this->fitness(population[i]);
-		if (curr_fitness < best_fitness) {
-			best_fitness = curr_fitness;
-		}
-	}
-	return best_fitness;
-}
-*/
-
-/*
-int Evolution::fitness(Organism& organism) {
-	int fit_scr = 0;
-	for (size_t i = 0; i < organism.size(); ++i) {
-		this->collisions(organism, fit_scr, i, MOVE::STILL);
-		this->collisions(organism, fit_scr, i, MOVE::UP);
-		this->collisions(organism, fit_scr, i, MOVE::DOWN);
-	}
-	return fit_scr;
-}
-*/
 
 int Evolution::fitness(Organism& organism) {
 	int fit_scr = 0;
@@ -143,23 +126,6 @@ void Evolution::collisions(
 	}
 }
 
-/*
-int Evolution::mean_fitness(Population& population) {
-	int summation = 0, size = population.size();
-	for (PopIter p = population.begin(); p != population.end(); ++p)
-		summation += this->fitness(*p);
-	return summation / size;
-}
-*/
-
-
-void Evolution::sort_population(Population& population) {
-	std::sort(
-		population.begin(),
-		population.end(),
-		organism_sort);
-}
-
 
 Organism Evolution::generate_organism(int size) {
 	Organism organism;
@@ -178,7 +144,12 @@ std::vector<int> Evolution::generate_genome(int size) {
 }
 
 
-std::mt19937 Evolution::mt19937_seeded() {
+inline void Evolution::sort_population(Population& pop) {
+	std::sort(pop.begin(), pop.end(), organism_sort);
+}
+
+
+inline std::mt19937 Evolution::mt19937_seeded() {
 	std::mt19937 mt(static_cast<unsigned int>(
 		std::chrono::high_resolution_clock::now().time_since_epoch().count()));
 	return mt;
@@ -195,14 +166,18 @@ int Evolution::least_fit(int genes) {
 }
 
 
-int Evolution::base_pair() {
+inline int Evolution::base_pair() {
 	return mutation_() % genome_size_;
 }
 
 
-void Evolution::snp(int& bp) {
+inline void Evolution::snp(int& bp) {
 	bp = (mutation_()+bp)%genome_size_;
 }
+
+
+
+
 
 
 /*
@@ -213,9 +188,39 @@ void Evolution::cull(Population& pop) {
 }
 */
 
-void Evolution::clear_genes() {
-	genome_.clear();
-	genome_.shrink_to_fit();
+
+/*
+void Evolution::mutate(Population& population, int mutations) {
+for (size_t i = 0; i < population.size(); ++i)
+for (int m = 0; m < mutations; ++m)
+this->snp(population[i][this->base_pair()]);
 }
+*/
+
+
+/*
+int Evolution::fitness(Population& population) {
+int best_fitness = 0;
+for (size_t i = 0; i < population.size(); ++i) {
+int curr_fitness = this->fitness(population[i]);
+if (curr_fitness < best_fitness) {
+best_fitness = curr_fitness;
+}
+}
+return best_fitness;
+}
+*/
+
+/*
+int Evolution::fitness(Organism& organism) {
+int fit_scr = 0;
+for (size_t i = 0; i < organism.size(); ++i) {
+this->collisions(organism, fit_scr, i, MOVE::STILL);
+this->collisions(organism, fit_scr, i, MOVE::UP);
+this->collisions(organism, fit_scr, i, MOVE::DOWN);
+}
+return fit_scr;
+}
+*/
 
 

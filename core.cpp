@@ -35,27 +35,20 @@ Core::~Core() {
 
 
 int Core::run() {
-
+	
 	Evolution evolution(NUM_GENES);
 	
+	/*
 	while (this->next_trial()) {
-		
 		Population parental = evolution.produce(POP_SIZE, FIT_THRESHOLD);
+		while (this->unsolved()) {
+			Population filial = evolution.reproduce(parental);
 
-		for (auto& p : parental) {
-			util::print_1d(p.genome_);
-			std::cout << "fitness: " << p.fitness_ << "\n\n";
 		}
-
-		//while (this->unsolved()) {
-			
-			
-
-		//}
 	}
-
+	*/
 	
-
+	
 
 
 	return this->complete(true);
@@ -82,8 +75,40 @@ bool Core::unsolved() {
 
 int Core::complete(bool success) {
 	std::cout << 
-		"The trial has ended." << "\n" << std::endl;
+		"The simulation has ended." << "\n" << std::endl;
 	return success ? 1 : -1;
+}
+
+
+
+void crossover_test() {
+
+	/*
+	std::vector<int> source01 = { 0,1,2,3,4,5,6,7,8,9 };
+	std::vector<int> source02 = { 10,11,12,13,14,15,16,17,18,19 };
+	int span = 4;
+	std::vector<int> target(10);
+	std::copy(source01.begin(), source01.begin() + span, target.begin());
+	std::copy(source02.begin() + span, source02.end(), target.begin() + span);
+	util::print_1d(source01);
+	util::print_1d(source02);
+	util::print_1d(target);
+	*/
+
+
+	/*
+	Organism a, b;
+	for (size_t i = 0; i < test_genome.size(); ++i) {
+		a.genome_.push_back(i);
+		b.genome_.push_back(i+100);
+	}
+	Organism offspring;
+	offspring.genome_.resize(test_genome.size());
+	evolution.crossover(a, b, offspring);
+	util::print_1d(offspring.genome_);
+	*/
+
+
 }
 
 

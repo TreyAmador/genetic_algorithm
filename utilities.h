@@ -8,21 +8,6 @@
 
 namespace util {
 
-
-	/*
-	int* copy_ptr(int* ptr, int size) {
-		int* res = new int[size];
-		for (int i = 0; i < size; ++i)
-			res[i] = ptr[i];
-		return res;
-	}
-	*/
-
-
-	//void print_newline() {
-	//	std::cout << std::endl;
-	//}
-
 	
 	template <class T>
 	void print_1d(
