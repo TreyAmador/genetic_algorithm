@@ -1,5 +1,4 @@
 #include <vector>
-#include "evolution.h"
 #include "utilities.h"
 #include "core.h"
 
@@ -12,6 +11,7 @@ namespace {
 	const int INSTABILITY = 1;
 	const int MUTATIONS = 1;
 
+	const int DESIRED_CONFIGS = 3;
 	const int FIT_THRESHOLD = 20;
 
 	std::vector<int> test_genome = {
@@ -37,36 +37,25 @@ Core::~Core() {
 int Core::run() {
 	
 	Evolution evolution(NUM_GENES);
-
-
-	Organism organism;
-	organism.genome_ = test_genome;
-	organism.fitness_ = evolution.fitness(organism);
-
 	while (this->next_trial()) {
-		Population parental = evolution.produce(POP_SIZE, FIT_THRESHOLD);
-
-
-		std::cout << "Initial Population:\n" << std::endl;
-		evolution.print_population(parental);
-
-		while (this->unsolved()) {
+		Population fittest;
+		Population parental = evolution.produce(POP_SIZE);
+		while (!this->enough_configs(fittest)) {
 			Population filial = evolution.reproduce(parental);
 			evolution.mutate(filial);
 			evolution.replenish(parental, filial, POP_SIZE);
-
-			if (parental[0].fitness_ == 210) {
-				std::cout << "\n\n\nSUCCESS!\n\n\n" << std::endl;
-				break;
+			if (evolution.has_fittest(parental)) {
+				evolution.get_fittest(parental, fittest, POP_SIZE);
+				std::cout << "\n\nFittest added to set\n\n" << std::endl;
 			}
-
+			std::cout << ".";
 		}
-
-		std::cout << "\n\n\nFinal Population:\n" << std::endl;
-		evolution.print_population(parental);
-
+		std::cout << "\n\n\nFittest Population:\n" << std::endl;
+		evolution.print_population(fittest);
 	}
-	
+
+
+
 	return this->complete(true);
 }
 
@@ -80,13 +69,8 @@ bool Core::next_trial() {
 }
 
 
-bool Core::unsolved() {
-	//static int trials = 0;
-	//if (trials++ < 20)
-	//	return true;
-	//else
-	//	return false;
-	return true;
+inline bool Core::enough_configs(Population& fittest) {
+	return fittest.size() >= DESIRED_CONFIGS;
 }
 
 

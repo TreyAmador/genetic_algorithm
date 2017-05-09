@@ -34,7 +34,7 @@ Evolution::~Evolution() {
 }
 
 
-Population Evolution::produce(size_t pop_size, int fit_thr) {
+Population Evolution::produce(size_t pop_size) {
 	Population population;
 	while (population.size() < pop_size)
 		population.push_back(this->generate_organism(genome_size_));
@@ -46,22 +46,11 @@ Population Evolution::produce(size_t pop_size, int fit_thr) {
 Population Evolution::reproduce(Population& population) {
 	Population filial;
 	int heirarchy = population.size() / 10;
-	for (size_t m = 0; m < heirarchy; ++m)
+	for (int m = 0; m < heirarchy; ++m)
 		for (size_t f = heirarchy; f < population.size(); ++f)
 			filial.push_back(this->crossover(population[m], population[f]));
 	return filial;
 }
-
-
-
-/*
-Population Evolution::reproduce(Population& parental) {
-	Population filial;
-	for (size_t i = 0; i < parental.size() - 1; i += 2)
-		filial.push_back(this->crossover(parental[i], parental[i+1]));
-	return filial;
-}
-*/
 
 
 Organism Evolution::crossover(Organism& male, Organism& female) {
@@ -115,7 +104,7 @@ void Evolution::replenish(Population& parental, Population& filial, int size) {
 	this->cull(filial);
 	for (int i = 0; i < size/2; ++i)
 		parental[i] = filial[i];
-	for (int i = size/2; i < parental.size(); ++i)
+	for (size_t i = size/2; i < parental.size(); ++i)
 		parental[i] = this->generate_organism(genome_size_);
 	this->clear_population(filial);
 	this->sort_population(parental);
@@ -123,7 +112,6 @@ void Evolution::replenish(Population& parental, Population& filial, int size) {
 
 
 void Evolution::cull(Population& population) {
-	// test
 	auto iter = population.begin();
 	while (iter != population.end()-1) {
 		if (iter->genome_ == (iter + 1)->genome_)
@@ -131,7 +119,6 @@ void Evolution::cull(Population& population) {
 		else
 			++iter;
 	}
-
 }
 
 
@@ -142,16 +129,19 @@ void Evolution::cull(Population& pop, int threshold) {
 			index = i;
 	if (index != SENTINEL)
 		pop.erase(pop.begin()+index, pop.end());
+}
 
-	//pop.erase(pop.begin(),pop.begin()+(pop.size()/threshold));
+
+void Evolution::get_fittest(Population& pop, Population& fittest, int size) {
+	for (size_t i = 0; i < pop.size() && pop[i].fitness_ == least_fit_; ++i)
+			fittest.push_back(pop[i]);
+	this->clear_population(pop);
+	pop = this->produce(size);
+}
 
 
-	//auto iter = std::lower_bound(pop.begin(), pop.end(), organism_search);
-	//if (iter != pop.end()) {
-	//	util::print_1d(iter->genome_);
-	//	std::cout << "fitness fxn " << iter->fitness_ << std::endl;
-	//}
-
+bool Evolution::has_fittest(Population& population) {
+	return population[0].fitness_ == least_fit_;
 }
 
 
@@ -216,9 +206,8 @@ inline std::mt19937 Evolution::mt19937_seeded() {
 // could also be genes * ( genes - 1 ) / 2
 int Evolution::least_fit(int genes) {
 	int fit = 0;
-	for (int i = 1; i < genes; ++i) {
+	for (int i = 1; i < genes; ++i)
 		fit += i;
-	}
 	return fit;
 }
 

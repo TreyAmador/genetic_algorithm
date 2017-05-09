@@ -1,5 +1,6 @@
 #ifndef CORE_H_
 #define CORE_H_
+#include "evolution.h"
 
 
 class Core {
@@ -13,7 +14,8 @@ public:
 
 private:
 	bool next_trial();
-	bool unsolved();
+	inline bool enough_configs(Population& fittest);
+	
 
 	int complete(bool success);
 

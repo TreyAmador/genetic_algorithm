@@ -30,7 +30,7 @@ public:
 	Evolution(int num_genes);
 	~Evolution();
 
-	Population produce(size_t pop_size, int fit_thr);
+	Population produce(size_t pop_size);
 	Population reproduce(Population& parental);
 
 	Organism crossover(Organism& male, Organism& female);
@@ -47,11 +47,14 @@ public:
 	void cull(Population& population, int threshold);
 
 	void cull(Population& population);
+
+	bool has_fittest(Population& population);
+
+	void get_fittest(Population& population, Population& fittest, int size);
+
 	
 	void replenish(Population& parental, Population& filial, int size);
 
-	//void survival(Population& population, Organism& organism);
-	
 	int fitness(Organism& organism);
 
 	Organism generate_organism(int size);
@@ -64,7 +67,7 @@ public:
 	void print_population(Population& population);
 
 
-private:
+public:
 	void collisions(
 		std::vector<int>& organism, int& fitness,
 		size_t col, int hrz);
