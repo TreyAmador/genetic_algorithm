@@ -112,12 +112,26 @@ void Evolution::mutate(Population& pop) {
 void Evolution::replenish(Population& parental, Population& filial, int size) {
 	this->clear_population(parental);
 	parental.resize(size);
+	this->cull(filial);
 	for (int i = 0; i < size/2; ++i)
 		parental[i] = filial[i];
-	for (int i = size/2; i < size; ++i)
+	for (int i = size/2; i < parental.size(); ++i)
 		parental[i] = this->generate_organism(genome_size_);
 	this->clear_population(filial);
 	this->sort_population(parental);
+}
+
+
+void Evolution::cull(Population& population) {
+	// test
+	auto iter = population.begin();
+	while (iter != population.end()-1) {
+		if (iter->genome_ == (iter + 1)->genome_)
+			population.erase(iter + 1);
+		else
+			++iter;
+	}
+
 }
 
 

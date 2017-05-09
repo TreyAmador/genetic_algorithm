@@ -45,6 +45,8 @@ public:
 
 	void mutate(Population& population);	
 	void cull(Population& population, int threshold);
+
+	void cull(Population& population);
 	
 	void replenish(Population& parental, Population& filial, int size);
 

@@ -55,8 +55,10 @@ int Core::run() {
 			evolution.mutate(filial);
 			evolution.replenish(parental, filial, POP_SIZE);
 
-			std::cout << "\n\niteration:\n" << std::endl;
-			evolution.print_population(parental);
+			if (parental[0].fitness_ == 210) {
+				std::cout << "\n\n\nSUCCESS!\n\n\n" << std::endl;
+				break;
+			}
 
 		}
 
@@ -79,11 +81,12 @@ bool Core::next_trial() {
 
 
 bool Core::unsolved() {
-	static int trials = 0;
-	if (trials++ < 10)
-		return true;
-	else
-		return false;
+	//static int trials = 0;
+	//if (trials++ < 20)
+	//	return true;
+	//else
+	//	return false;
+	return true;
 }
 
 
