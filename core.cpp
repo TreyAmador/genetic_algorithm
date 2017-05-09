@@ -7,7 +7,7 @@
 namespace {
 	// some of these should be in evolution?
 	const int NUM_GENES = 21;
-	const int POP_SIZE = 10000;
+	const int POP_SIZE = 100;
 	const int CROSSES = 10;
 	const int INSTABILITY = 1;
 	const int MUTATIONS = 1;
@@ -37,19 +37,32 @@ Core::~Core() {
 int Core::run() {
 	
 	Evolution evolution(NUM_GENES);
+
+
+	Organism organism;
+	organism.genome_ = test_genome;
+	organism.fitness_ = evolution.fitness(organism);
+
 	while (this->next_trial()) {
 		Population parental = evolution.produce(POP_SIZE, FIT_THRESHOLD);
+
+
+		std::cout << "Initial Population:\n" << std::endl;
+		evolution.print_population(parental);
+
 		while (this->unsolved()) {
 			Population filial = evolution.reproduce(parental);
 			evolution.mutate(filial);
-			evolution.cull(filial, 20);
+			evolution.replenish(parental, filial, POP_SIZE);
 
-			std::cout << "this many people " << filial.size() << std::endl;
+			std::cout << "\n\niteration:\n" << std::endl;
+			evolution.print_population(parental);
 
-			util::print_1d(filial[0].genome_);
-			std::cout << "fitness: " << filial[0].fitness_ << "\n\n";
-			
 		}
+
+		std::cout << "\n\n\nFinal Population:\n" << std::endl;
+		evolution.print_population(parental);
+
 	}
 	
 	return this->complete(true);
@@ -67,7 +80,7 @@ bool Core::next_trial() {
 
 bool Core::unsolved() {
 	static int trials = 0;
-	if (trials++ < 1)
+	if (trials++ < 10)
 		return true;
 	else
 		return false;

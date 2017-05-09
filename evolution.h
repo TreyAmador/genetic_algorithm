@@ -46,6 +46,9 @@ public:
 	void mutate(Population& population);	
 	void cull(Population& population, int threshold);
 	
+	void replenish(Population& parental, Population& filial, int size);
+
+	//void survival(Population& population, Organism& organism);
 	
 	int fitness(Organism& organism);
 
@@ -67,7 +70,9 @@ private:
 
 	inline int base_pair();
 	inline void snp(int& bp);
-	
+	inline bool is_mutable();
+
+	void clear_population(Population& population);
 	
 private:
 	const int genome_size_;

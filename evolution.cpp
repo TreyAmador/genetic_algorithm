@@ -13,19 +13,13 @@ namespace {
 
 // fittest organisms at top of heirarchy
 bool organism_sort(Organism& a, Organism& b) {
-	return a.fitness_ < b.fitness_;
+	return a.fitness_ > b.fitness_;
 }
 
 
 bool organism_search(Organism& a, Organism& b) {
-	return a.fitness_ < b.fitness_;
+	return a.fitness_ > b.fitness_;
 }
-
-
-//template<class Iter, class T>
-//Iter binary_find(Iter begin, Iter end, T val) {
-//
-//}
 
 
 Evolution::Evolution(int num_genes) : 
@@ -42,22 +36,32 @@ Evolution::~Evolution() {
 
 Population Evolution::produce(size_t pop_size, int fit_thr) {
 	Population population;
-	while (population.size() < pop_size) {
-		Organism organism = this->generate_organism(genome_size_);
-		if (organism.fitness_ < fit_thr)
-			population.push_back(organism);
-	}
+	while (population.size() < pop_size)
+		population.push_back(this->generate_organism(genome_size_));
 	this->sort_population(population);
 	return population;
 }
 
 
+Population Evolution::reproduce(Population& population) {
+	Population filial;
+	int heirarchy = population.size() / 10;
+	for (size_t m = 0; m < heirarchy; ++m)
+		for (size_t f = heirarchy; f < population.size(); ++f)
+			filial.push_back(this->crossover(population[m], population[f]));
+	return filial;
+}
+
+
+
+/*
 Population Evolution::reproduce(Population& parental) {
 	Population filial;
 	for (size_t i = 0; i < parental.size() - 1; i += 2)
-		filial.push_back(this->crossover(parental[i], parental[i + 1]));
+		filial.push_back(this->crossover(parental[i], parental[i+1]));
 	return filial;
 }
+*/
 
 
 Organism Evolution::crossover(Organism& male, Organism& female) {
@@ -67,11 +71,6 @@ Organism Evolution::crossover(Organism& male, Organism& female) {
 		this->crossover(male, female, offspring);
 	else
 		this->crossover(female, male, offspring);
-	
-	// fitness calc should be removed, placed only in mutation fxn
-	//offspring.fitness_ = this->fitness(offspring);
-	// here just for testing purposes
-	
 	return offspring;
 }
 
@@ -102,13 +101,23 @@ void Evolution::crossover(
 // test this
 void Evolution::mutate(Population& pop) {
 	for (auto p = pop.begin(); p != pop.end(); ++p) {
-		int mutations = mutation_() % 2;
-		for (int i = 0; i < mutations; ++i) {
+		if (this->is_mutable())
 			this->snp(p->genome_[this->base_pair()]);
-		}
 		p->fitness_ = this->fitness(*p);
 	}
 	this->sort_population(pop);
+}
+
+
+void Evolution::replenish(Population& parental, Population& filial, int size) {
+	this->clear_population(parental);
+	parental.resize(size);
+	for (int i = 0; i < size/2; ++i)
+		parental[i] = filial[i];
+	for (int i = size/2; i < size; ++i)
+		parental[i] = this->generate_organism(genome_size_);
+	this->clear_population(filial);
+	this->sort_population(parental);
 }
 
 
@@ -139,7 +148,7 @@ int Evolution::fitness(Organism& organism) {
 		this->collisions(organism.genome_, fit_scr, i, MOVE::UP);
 		this->collisions(organism.genome_, fit_scr, i, MOVE::DOWN);
 	}
-	return fit_scr;
+	return least_fit_-fit_scr;
 }
 
 
@@ -207,6 +216,18 @@ inline int Evolution::base_pair() {
 
 inline void Evolution::snp(int& bp) {
 	bp = (mutation_()+bp)%genome_size_;
+}
+
+
+inline bool Evolution::is_mutable() {
+	return mutation_() % 3 == 0;
+}
+
+
+void Evolution::clear_population(Population& population) {
+	for (size_t i = 0; i < population.size(); ++i)
+		util::clear_vec(population[i].genome_);
+	util::clear_vec(population);
 }
 
 
