@@ -4,23 +4,9 @@
 
 
 namespace {
-	// some of these should be in evolution?
 	const int NUM_GENES = 21;
 	const int POP_SIZE = 100;
-	const int CROSSES = 10;
-	const int INSTABILITY = 1;
-	const int MUTATIONS = 1;
-
 	const int DESIRED_CONFIGS = 3;
-	const int FIT_THRESHOLD = 20;
-
-	std::vector<int> test_genome = {
-		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
-	};
-
-	// testing structures
-	// Organism organism = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
-	// Organism organism(NUM_GENES, 5);
 }
 
 
@@ -45,7 +31,7 @@ int Core::run() {
 			evolution.mutate(filial);
 			evolution.replenish(parental, filial, POP_SIZE);
 			if (evolution.has_fittest(parental)) {
-				evolution.get_fittest(parental, fittest, POP_SIZE);
+				evolution.save_fittest(parental, fittest, POP_SIZE);
 				std::cout << "\n\nFittest added to set\n\n" << std::endl;
 			}
 			std::cout << ".";

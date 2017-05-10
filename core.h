@@ -16,7 +16,6 @@ private:
 	bool next_trial();
 	inline bool enough_configs(Population& fittest);
 	
-
 	int complete(bool success);
 
 
