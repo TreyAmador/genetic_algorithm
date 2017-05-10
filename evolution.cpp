@@ -37,6 +37,17 @@ Population Evolution::produce(size_t pop_size) {
 }
 
 
+Population Evolution::reproduce(Population& population, int size) {
+	Population filial;
+	int h = population.size()/10;
+	for (int m = 0; m < h; ++m)
+		for (int f = h; f < h*2; ++f)
+			filial.push_back(this->crossover(population[m], population[f]));
+	return filial;
+}
+
+
+/*
 Population Evolution::reproduce(Population& population) {
 	Population filial;
 	int heirarchy = population.size() / 10;
@@ -45,6 +56,7 @@ Population Evolution::reproduce(Population& population) {
 			filial.push_back(this->crossover(population[m], population[f]));
 	return filial;
 }
+*/
 
 
 // test this
@@ -54,14 +66,13 @@ void Evolution::mutate(Population& pop) {
 			this->snp(p->genome_[this->base_pair()]);
 		p->fitness_ = this->fitness(*p);
 	}
-	this->sort_population(pop);
 }
 
 
 void Evolution::replenish(Population& parental, Population& filial, int size) {
 	this->clear_population(parental);
 	parental.resize(size);
-	this->cull(filial);
+	this->sort_population(filial);
 	for (int i = 0; i < size/2; ++i)
 		parental[i] = filial[i];
 	for (size_t i = size/2; i < parental.size(); ++i)
@@ -77,8 +88,7 @@ bool Evolution::has_fittest(Population& population) {
 
 
 void Evolution::save_fittest(Population& pop, Population& fittest, int size) {
-	for (size_t i = 0; i < pop.size() && pop[i].fitness_ == least_fit_; ++i)
-			fittest.push_back(pop[i]);
+	fittest.push_back(pop[0]);
 	this->clear_population(pop);
 	pop = this->produce(size);
 }
