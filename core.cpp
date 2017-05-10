@@ -1,6 +1,7 @@
 #include <vector>
 #include "utilities.h"
 #include "core.h"
+#include "io.h"
 
 
 namespace {
@@ -22,27 +23,24 @@ Core::~Core() {
 
 int Core::run() {
 	
+	IO io("");
 	Evolution evolution(NUM_GENES);
 	while (this->next_trial()) {
+		io.user_prompt(NUM_GENES);
 		Population fittest;
 		Population parental = evolution.produce(POP_SIZE);
 		while (!this->enough_configs(fittest)) {
 			Population filial = evolution.reproduce(parental);
 			evolution.mutate(filial);
 			evolution.replenish(parental, filial, POP_SIZE);
-			if (evolution.has_fittest(parental)) {
+			if (evolution.has_fittest(parental))
 				evolution.save_fittest(parental, fittest, POP_SIZE);
-				std::cout << "\n\nFittest added to set\n\n" << std::endl;
-			}
-			std::cout << ".";
+			io.iteration(fittest);
 		}
-		std::cout << "\n\n\nFittest Population:\n" << std::endl;
-		evolution.print_population(fittest);
+		io.summary(fittest);
 	}
 
-
-
-	return this->complete(true);
+	return io.terminate(true);
 }
 
 
@@ -60,11 +58,11 @@ inline bool Core::enough_configs(Population& fittest) {
 }
 
 
-int Core::complete(bool success) {
-	std::cout << 
-		"The simulation has ended." << "\n" << std::endl;
-	return success ? 1 : -1;
-}
+//int Core::complete(bool success) {
+//	std::cout << 
+//		"The simulation has ended." << "\n" << std::endl;
+//	return success ? 1 : -1;
+//}
 
 
 
