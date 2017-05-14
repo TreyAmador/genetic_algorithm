@@ -20,6 +20,8 @@ public:
 	void print_population(Population& fittest);
 
 	int terminate(bool success);
+	void data_output();
+
 
 private:
 	std::fstream fs_;

@@ -29,14 +29,29 @@ int Core::run() {
 		io.user_prompt(NUM_GENES);
 		Population fittest;
 		Population parental = evolution.produce(POP_SIZE);
+
+		//auto init_trial = this->get_time();
+
 		while (!this->enough_configs(fittest)) {
+
+			//auto init_iter = this->get_time();
+			//auto init_iter = std::chrono::high_resolution_clock::now().time_since_epoch();
+
 			Population filial = evolution.reproduce(parental,POP_SIZE);
 			evolution.mutate(filial);
 			evolution.replenish(parental, filial, POP_SIZE);
 			if (evolution.has_fittest(parental))
 				evolution.save_fittest(parental, fittest, POP_SIZE);
 			io.iteration(fittest);
+
+			//auto iter_delta = this->delta_time(init_iter);
+			//std::cout << "Iteration time: " << iter_delta << std::endl;
+
 		}
+
+		//auto delta_trial = this->delta_time(init_trial);
+		//std::cout << "Trial time: " << delta_trial << std::endl;
+
 		io.summary(fittest);
 	}
 	return io.terminate(true);
@@ -55,4 +70,7 @@ bool Core::next_trial() {
 inline bool Core::enough_configs(Population& fittest) {
 	return fittest.size() >= DESIRED_CONFIGS;
 }
+
+
+
 
