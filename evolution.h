@@ -31,7 +31,7 @@ public:
 	~Evolution();
 
 	Population produce(size_t pop_size);
-	Population reproduce(Population& parental, int size);
+	Population reproduce(Population& parental);
 
 	void mutate(Population& population);	
 	void replenish(Population& parental, Population& filial, int size);

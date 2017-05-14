@@ -23,19 +23,16 @@ void IO::user_prompt(int queens) {
 	std::string any_key;
 	std::cout << 
 		"Welcome to the " << queens << 
-		"-Queens problem solver, using a genetic algorithm." << "\n" 
-		"Enter the number of configurations you wish to solve: ";
-	//std::cin >> any_key;
-	std::cout << std::endl;
+		"-Queens problem solver, using a genetic algorithm." << "\n" << std::endl;
 }
 
 
 void IO::iteration(Population& fittest) {
-	if (fittest.size() > fit_organisms_)
-		std::cout << "\n" << "You have " << ++fit_organisms_ <<
-		" solved configurations" << std::endl;
-	else
-		std::cout << ".";
+	//if (fittest.size() > fit_organisms_)
+	//	std::cout << "\n" << "You have " << ++fit_organisms_ <<
+	//	" solved configurations" << std::endl;
+	//else
+	//	std::cout << ".";
 }
 
 

@@ -1,7 +1,6 @@
 #include <vector>
 #include "utilities.h"
 #include "core.h"
-#include "io.h"
 
 
 namespace {
@@ -22,39 +21,67 @@ Core::~Core() {
 
 
 int Core::run() {
-	
 	IO io("");
+	Data data;
 	Evolution evolution(NUM_GENES);
 	while (this->next_trial()) {
-		io.user_prompt(NUM_GENES);
+		
+		
+		//io.user_prompt(NUM_GENES);
+
+		this->begin_trial(io, data, NUM_GENES);
+
 		Population fittest;
 		Population parental = evolution.produce(POP_SIZE);
-
-		//auto init_trial = this->get_time();
-
 		while (!this->enough_configs(fittest)) {
+			
+			this->begin_interation(data);
 
-			//auto init_iter = this->get_time();
-			//auto init_iter = std::chrono::high_resolution_clock::now().time_since_epoch();
-
-			Population filial = evolution.reproduce(parental,POP_SIZE);
+			Population filial = evolution.reproduce(parental);
 			evolution.mutate(filial);
 			evolution.replenish(parental, filial, POP_SIZE);
 			if (evolution.has_fittest(parental))
 				evolution.save_fittest(parental, fittest, POP_SIZE);
-			io.iteration(fittest);
+			
+			//io.iteration(fittest);
 
-			//auto iter_delta = this->delta_time(init_iter);
-			//std::cout << "Iteration time: " << iter_delta << std::endl;
+			this->end_iteration(io, data, fittest);
 
 		}
 
-		//auto delta_trial = this->delta_time(init_trial);
-		//std::cout << "Trial time: " << delta_trial << std::endl;
+		this->end_trial(io, data, fittest);
 
-		io.summary(fittest);
+		//io.summary(fittest);
+
+
 	}
 	return io.terminate(true);
+}
+
+
+void Core::begin_interation(Data& data) {
+	//data.init_iter();
+}
+
+
+void Core::end_iteration(IO& io, Data& data, Population& population) {
+	//long long delta = data.end_iter();
+	//std::cout << delta << ", ";
+	//io.iteration(population);
+	std::cout << ".";
+}
+
+
+void Core::begin_trial(IO& io, Data& data, int size) {
+	io.user_prompt(size);
+	//data.init_trial();
+}
+
+
+void Core::end_trial(IO& io, Data& data, Population& population) {
+	//long long delta = data.end_trial();
+	//std::cout << "\n\n" << "Trial: " << delta << "\n\n" << std::endl;
+	io.summary(population);
 }
 
 
@@ -70,7 +97,4 @@ bool Core::next_trial() {
 inline bool Core::enough_configs(Population& fittest) {
 	return fittest.size() >= DESIRED_CONFIGS;
 }
-
-
-
 
