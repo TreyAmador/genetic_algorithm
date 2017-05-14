@@ -28,18 +28,20 @@ void IO::user_prompt(int queens) {
 
 
 void IO::iteration(Population& fittest) {
-	//if (fittest.size() > fit_organisms_)
-	//	std::cout << "\n" << "You have " << ++fit_organisms_ <<
-	//	" solved configurations" << std::endl;
-	//else
-	//	std::cout << ".";
+	if (fittest.size() > fit_organisms_)
+		std::cout << "\n" << "You have " << ++fit_organisms_ <<
+		" solved configurations" << std::endl;
+	else
+		std::cout << ".";
 }
 
 
-void IO::summary(Population& fittest) {
-	std::cout << 
-		"You have found " << fittest.size() << 
-		" solutions to the queen problem." << "\n";
+void IO::summary(long long mean, Population& fittest, int generations) {
+	std::cout << "\n" <<
+		"This required " << mean << 
+		" milliseconds per trial on average." << "\n" <<
+		"The average number of generations was " << generations << 
+		" generations." << "\n\n" << std::endl;
 	this->print_population(fittest);
 }
 
@@ -52,7 +54,7 @@ int IO::terminate(bool success) {
 
 
 void IO::print_population(Population& fittest) {
-	std::cout << "\n" << 
+	std::cout << 
 		"The following configurations have no collisions: " << "\n" << std::endl;
 	for (auto iter = fittest.begin(); iter != fittest.end(); ++iter) {
 		for (size_t i = 0; i < iter->genome_.size(); ++i)

@@ -47,14 +47,14 @@ public:
 	}
 
 	void stats() {
-
+		
 	}
 
-	long long mean(std::vector<long long>& delta) {
+	long long mean() {
 		long long sum = 0;
-		for (size_t i = 0; i < delta.size(); ++i)
-			sum += delta[i];
-		return sum / static_cast<long long>(delta.size());
+		for (size_t i = 0; i < trial_deltas_.size(); ++i)
+			sum += trial_deltas_[i];
+		return sum / static_cast<long long>(trial_deltas_.size());
 	}
 
 private:

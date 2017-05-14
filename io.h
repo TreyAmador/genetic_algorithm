@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include "evolution.h"
+#include "data.h"
 
 
 class IO {
@@ -16,12 +17,11 @@ public:
 	void init_filestream(const std::string& filepath);
 	void user_prompt(int queens);
 	void iteration(Population& fittest);
-	void summary(Population& fittest);
+	void summary(long long mean, Population& fittest, int generations);
 	void print_population(Population& fittest);
 
 	int terminate(bool success);
-	void data_output();
-
+	
 
 private:
 	std::fstream fs_;

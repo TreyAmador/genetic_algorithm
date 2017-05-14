@@ -24,64 +24,40 @@ int Core::run() {
 	IO io("");
 	Data data;
 	Evolution evolution(NUM_GENES);
+	int generations = 0;
 	while (this->next_trial()) {
-		
-		
-		//io.user_prompt(NUM_GENES);
-
 		this->begin_trial(io, data, NUM_GENES);
-
 		Population fittest;
 		Population parental = evolution.produce(POP_SIZE);
 		while (!this->enough_configs(fittest)) {
-			
-			this->begin_interation(data);
-
 			Population filial = evolution.reproduce(parental);
 			evolution.mutate(filial);
 			evolution.replenish(parental, filial, POP_SIZE);
 			if (evolution.has_fittest(parental))
 				evolution.save_fittest(parental, fittest, POP_SIZE);
-			
-			//io.iteration(fittest);
-
-			this->end_iteration(io, data, fittest);
-
+			io.iteration(fittest);
+			++generations;
 		}
-
-		this->end_trial(io, data, fittest);
-
-		//io.summary(fittest);
-
-
+		this->end_trial(io, data, fittest, generations);
 	}
 	return io.terminate(true);
 }
 
 
-void Core::begin_interation(Data& data) {
-	//data.init_iter();
-}
-
-
-void Core::end_iteration(IO& io, Data& data, Population& population) {
-	//long long delta = data.end_iter();
-	//std::cout << delta << ", ";
-	//io.iteration(population);
-	std::cout << ".";
-}
-
-
 void Core::begin_trial(IO& io, Data& data, int size) {
 	io.user_prompt(size);
-	//data.init_trial();
+	data.init_trial();
 }
 
 
-void Core::end_trial(IO& io, Data& data, Population& population) {
-	//long long delta = data.end_trial();
-	//std::cout << "\n\n" << "Trial: " << delta << "\n\n" << std::endl;
-	io.summary(population);
+void Core::end_trial(
+	IO& io, Data& data, 
+	Population& population, 
+	int generations) 
+{
+	long long delta = data.end_trial();
+	long long mean = (delta / 1000000) / DESIRED_CONFIGS;
+	io.summary(mean,population,generations/DESIRED_CONFIGS);
 }
 
 

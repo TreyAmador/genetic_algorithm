@@ -47,24 +47,25 @@ Population Evolution::reproduce(Population& population) {
 }
 
 
-// test this
 void Evolution::mutate(Population& pop) {
 	for (auto p = pop.begin(); p != pop.end(); ++p) {
 		if (this->is_mutable())
 			this->snp(p->genome_[this->base_pair()]);
 		p->fitness_ = this->fitness(*p);
 	}
-	this->sort_population(pop);
 }
 
 
 void Evolution::replenish(Population& parental, Population& filial, int size) {
 	this->clear_population(parental);
 	parental.resize(size);
+	this->sort_population(filial);
 	this->cull(filial);
-	for (int i = 0; i < size/2; ++i)
+	int max = size/2 > static_cast<int>(filial.size()) ?
+		filial.size() : size/2;
+	for (int i = 0; i < max; ++i)
 		parental[i] = filial[i];
-	for (size_t i = size/2; i < parental.size(); ++i)
+	for (size_t i = max; i < parental.size(); ++i)
 		parental[i] = this->generate_organism(genome_size_);
 	this->clear_population(filial);
 	this->sort_population(parental);
@@ -140,8 +141,6 @@ int Evolution::fitness(Organism& organism) {
 }
 
 
-// TODO: revise to be more efficient
-// second condition in if => init differently
 void Evolution::collisions(
 	std::vector<int>& org, int& fit_scr,
 	size_t column, int hrz)
