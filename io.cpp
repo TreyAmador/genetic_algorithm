@@ -19,11 +19,12 @@ void IO::init_filestream(const std::string& filepath) {
 }
 
 
-void IO::user_prompt(int queens) {
+void IO::user_prompt(int queens, int trials) {
 	std::string any_key;
 	std::cout << 
 		"Welcome to the " << queens << 
-		"-Queens problem solver, using a genetic algorithm." << "\n" << std::endl;
+		"-Queens problem solver, which will find " << trials << 
+		" configurations using a genetic algorithm." << "\n" << std::endl;
 }
 
 

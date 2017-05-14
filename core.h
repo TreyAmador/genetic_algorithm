@@ -15,7 +15,7 @@ public:
 
 
 private:
-	void begin_trial(IO& io, Data& data, int size);
+	void begin_trial(IO& io, Data& data, int size, int trials);
 	void end_trial(IO& io, Data& data, Population& population, int generations);
 
 	bool next_trial();

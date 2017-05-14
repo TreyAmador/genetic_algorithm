@@ -6,7 +6,7 @@
 namespace {
 	const int NUM_GENES = 21;
 	const int POP_SIZE = 100;
-	const int DESIRED_CONFIGS = 3;
+	const int DESIRED_CONFIGS = 5;
 }
 
 
@@ -26,7 +26,7 @@ int Core::run() {
 	Evolution evolution(NUM_GENES);
 	int generations = 0;
 	while (this->next_trial()) {
-		this->begin_trial(io, data, NUM_GENES);
+		this->begin_trial(io, data, NUM_GENES,DESIRED_CONFIGS);
 		Population fittest;
 		Population parental = evolution.produce(POP_SIZE);
 		while (!this->enough_configs(fittest)) {
@@ -44,8 +44,8 @@ int Core::run() {
 }
 
 
-void Core::begin_trial(IO& io, Data& data, int size) {
-	io.user_prompt(size);
+void Core::begin_trial(IO& io, Data& data, int size, int trials) {
+	io.user_prompt(size, trials);
 	data.init_trial();
 }
 

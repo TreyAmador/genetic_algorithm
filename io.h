@@ -15,7 +15,7 @@ public:
 	~IO();
 
 	void init_filestream(const std::string& filepath);
-	void user_prompt(int queens);
+	void user_prompt(int queens, int trials);
 	void iteration(Population& fittest);
 	void summary(long long mean, Population& fittest, int generations);
 	void print_population(Population& fittest);
