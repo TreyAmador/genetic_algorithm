@@ -27,61 +27,16 @@ Core::~Core() {
 
 int Core::run() {
 
-	LocalSearch search(CONFIG_SIZE);
 	int trial = 0;
-	
-	int sum_opt = 0;
-	
-
-	/*
-	int iter = 0;
-
-	while (true) {
-		std::vector<int> config = search.generate_config(CONFIG_SIZE);
-		std::vector<int> optimal = search.climb_up(config);
-		if (search.config_score(optimal) == 210) {
-			std::cout << std::endl;
-			util::print_1d(optimal);
-			std::cout << "\n" << "Success!" << std::endl;
-			std::cout << "After only " << iter << " iterations!" << "\n" << std::endl;
-		}
-
-		std::cout << ".";
-
-		++iter;
-	}
-	*/
-
-
-	
+	LocalSearch search(CONFIG_SIZE);
 	while (!this->is_complete(trial)) {
-
 		std::vector<int> config = search.generate_config(CONFIG_SIZE);
-		
-		//std::vector<int> optimal = search.climb_up(config);
-		
-		//std::vector<int> optimal = search.climb_right(config);
-
 		std::vector<int> optimal = search.climb(config);
-
-
-		util::print_1d(optimal);
-		std::cout << 
-			search.config_score(config) << " " << 
+		std::cout <<
+			search.config_score(config) << " " <<
 			search.config_score(optimal) << "\n" << std::endl;
-
-		sum_opt += search.config_score(optimal);
-
-
 		++trial;
 	}
-	
-
-	std::cout << "\n\nAverage: " << sum_opt / TOTAL_TRIALS << "\n" << std::endl;
-
-
-
-
 	return 0;
 }
 
