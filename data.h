@@ -7,14 +7,10 @@
 struct Data {
 
 public:
-
-	Data() {
-
-	}
-
-	~Data() {
-		
-	}
+	//Data() {
+	//}
+	//~Data() {	
+	//}
 
 	void init_iter() {
 		iter_init_ = this->get_time();

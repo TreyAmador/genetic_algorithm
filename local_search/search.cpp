@@ -50,11 +50,14 @@ std::vector<int> LocalSearch::climb(std::vector<int>& config) {
 			std::vector<int> neighbor = util::copy_vec(current);
 			for (int r = 0; r < config_size_; ++r) {
 				neighbor[c] = r;
-				if (this->config_score(neighbor) >= this->config_score(current))
+				int neighbor_score = this->config_score(neighbor);
+				if (neighbor_score >= current_max) {
 					current = neighbor;
+					current_max = neighbor_score;
+				}
 			}
 		}
-		attempts = this->improved(current, iteration) ? 0 : ++attempts;
+		attempts = this->improved(current_max, iteration) ? 0 : ++attempts;
 	} while (attempts < ALLOWABLE_ATTEMPTS);
 	return current;
 }
@@ -168,4 +171,13 @@ bool LocalSearch::improved(
 	return this->config_score(current) > this->config_score(neighbor);
 }
 
+
+bool LocalSearch::improved(int current_max, std::vector<int>& neighbor) {
+	return current_max > this->config_score(neighbor);
+}
+
+
+int LocalSearch::get_max() {
+	return least_fit_;
+}
 

@@ -27,21 +27,48 @@ Core::~Core() {
 
 int Core::run() {
 
-	int trial = 0;
 	LocalSearch search(CONFIG_SIZE);
+	int max_score = search.get_max(), trial = 0, success = 0;
 	while (!this->is_complete(trial)) {
 		std::vector<int> config = search.generate_config(CONFIG_SIZE);
 		std::vector<int> optimal = search.climb(config);
-		std::cout <<
-			search.config_score(config) << " " <<
-			search.config_score(optimal) << "\n" << std::endl;
+		int score = this->iteration_summary(search, config, optimal);
+		if (this->goal_config(max_score,score))
+			++success;
 		++trial;
 	}
-	return 0;
+	return this->complete(success, TOTAL_TRIALS);
 }
-
 
 
 inline bool Core::is_complete(int trial) {
 	return trial >= TOTAL_TRIALS;
 }
+
+
+inline bool Core::goal_config(int max, int score) {
+	return max == score;
+}
+
+
+int Core::iteration_summary(
+	LocalSearch& search,
+	std::vector<int>& config,
+	std::vector<int>& optimal) 
+{
+	int score = search.config_score(optimal);
+	util::print_1d(config);
+	util::print_1d(optimal, " ", " ");
+	std::cout << "Score: " << score << "\n" << std::endl;
+	return score;
+}
+
+
+int Core::complete(int success, int total) {
+	std::cout << "\n\n" <<
+		"Successes: " <<
+		static_cast<double>(success) / total << "\n" << std::endl;
+	return 0;
+}
+
+

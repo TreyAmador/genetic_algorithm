@@ -3,19 +3,11 @@
 
 IO::IO(const std::string& filepath) : 
 	fit_organisms_(0) 
-{
-	this->init_filestream(filepath);
-}
+{}
 
 
 IO::~IO() {
 
-}
-
-
-void IO::init_filestream(const std::string& filepath) {
-	//fs_.open(filepath);
-	
 }
 
 
@@ -63,5 +55,4 @@ void IO::print_population(Population& fittest) {
 		std::cout << std::endl;
 	}
 }
-
 

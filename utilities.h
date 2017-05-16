@@ -6,6 +6,7 @@
 #include <string>
 #include <random>
 
+
 namespace util {
 
 	
@@ -68,7 +69,6 @@ namespace util {
 		int index;
 		int element;
 	};
-
 
 
 }

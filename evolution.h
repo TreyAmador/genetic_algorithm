@@ -20,7 +20,6 @@ struct Organism {
 	int fitness_;
 };
 
-
 typedef std::vector<Organism> Population;
 
 
