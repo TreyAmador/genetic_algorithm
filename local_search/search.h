@@ -17,6 +17,10 @@ public:
 	void collisions(
 		std::vector<int>& config, int& fit_scr,
 		size_t column, int hrz);
+	bool improved(
+		std::vector<int>& current,
+		std::vector<int>& neighbor);
+	//bool improved(int current_max,std::vector<int>& neighbor);
 
 
 private:

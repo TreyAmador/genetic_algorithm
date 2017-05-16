@@ -6,6 +6,11 @@
 #include "utilities.h"
 
 
+namespace {
+	const int ALLOWABLE_ATTEMPTS = 2;
+}
+
+
 enum MOVE {
 	UP = 1,
 	DOWN = -1,
@@ -37,6 +42,79 @@ std::vector<int> LocalSearch::generate_config(int size) {
 
 std::vector<int> LocalSearch::climb(std::vector<int>& config) {
 	std::vector<int> current = util::copy_vec(config);
+	int current_max = this->config_score(current);
+	int attempts = 0;
+	do {
+		std::vector<int> iteration = util::copy_vec(current);
+		for (int c = 0; c < config_size_; ++c) {
+			std::vector<int> neighbor = util::copy_vec(current);
+			for (int r = 0; r < config_size_; ++r) {
+				neighbor[c] = r;
+				if (this->config_score(neighbor) >= this->config_score(current))
+					current = neighbor;
+			}
+		}
+		attempts = this->improved(current, iteration) ? 0 : ++attempts;
+	} while (attempts < ALLOWABLE_ATTEMPTS);
+	return current;
+}
+
+
+
+/*
+std::vector<int> LocalSearch::climb(std::vector<int>& config) {
+	std::vector<int> current = util::copy_vec(config);
+	std::vector<int> iteration;
+	do {
+		iteration = current;
+		for (int c = 0; c < config_size_; ++c) {
+			std::vector<int> neighbor = util::copy_vec(current);
+			for (int r = 0; r < config_size_; ++r) {
+				neighbor[c] = r;
+				if (this->config_score(neighbor) > this->config_score(current))
+					current = neighbor;
+			}
+		}
+	} while (!util::equal(current,iteration));
+	return current;
+}
+*/
+
+/*
+std::vector<int> LocalSearch::climb(std::vector<int>& config) {
+	
+	std::vector<int> current = util::copy_vec(config);
+	std::vector<int> iteration;
+	int iter = 0;
+	do {
+		iteration = current;
+		for (int c = 0; c < config_size_; ++c) {
+			std::vector<int> neighbor = util::copy_vec(current);
+			for (int r = 0; r < config_size_; ++r) {
+				neighbor[c] = r;
+				if (this->config_score(neighbor) > this->config_score(current))
+					current = neighbor;
+			}
+		}
+		//if (this->config_score(current) <= this->config_score(iteration))
+		//	++iter;
+		//else
+		//	iter = 0;
+
+		if (util::equal(current, iteration))
+			++iter;
+		else
+			iter = 0;
+
+	} while (iter < 2);
+	return current;
+}
+*/
+
+
+/*
+std::vector<int> LocalSearch::climb(std::vector<int>& config) {
+	std::vector<int> current = util::copy_vec(config);
 	std::vector<int> iteration;
 	for (int i = 0; i < 3 && this->config_score(current) < least_fit_; ++i) {
 		do {
@@ -53,6 +131,7 @@ std::vector<int> LocalSearch::climb(std::vector<int>& config) {
 	}
 	return current;
 }
+*/
 
 
 int LocalSearch::config_score(std::vector<int>& config) {
@@ -82,6 +161,11 @@ void LocalSearch::collisions(
 }
 
 
-
+bool LocalSearch::improved(
+	std::vector<int>& current,
+	std::vector<int>& neighbor)
+{
+	return this->config_score(current) > this->config_score(neighbor);
+}
 
 
